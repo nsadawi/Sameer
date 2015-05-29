@@ -25,9 +25,16 @@
 
 \usepackage{listings}
 \usepackage{url}
-%\usepackage{graphicx}
+
+
+\usepackage{subcaption}
 
 \usepackage{verbatim}
+
+\usepackage{array}
+\usepackage{booktabs}
+\setlength{\heavyrulewidth}{1.5pt}
+\setlength{\abovetopsep}{4pt}
 
 %\usepackage{caption}
 %\usepackage{enumitem}
@@ -47,12 +54,7 @@ Regression analysis is a powerful technique that can be used to address various 
 \section{The Modelling Tool}
 In order to fit models, we are going to use R~\cite{R} which is a powerful and easy to use tool for statistical computing and graphics. R makes it easy to manipulate data and perform calculations as well as display information graphically. It also facilitates modelling (linear and nonlinear) and other statistical processes.
 \section{Plotting the Data}
-\begin{figure}[b]
-  \centering
-  \includegraphics[width=0.5\textwidth]{pairs}
-  \caption{A gull}
-  \label{fig:pairs}
-\end{figure}
+
 
 \section{Examining a Fit}
 There are several diagnostics that can be used to explore the goodness of fit of a model. In the remainder of this report we are going to use the following:
@@ -85,13 +87,113 @@ Let us examine Figure~\ref{fig:cu-goodness}. The top-left plot shows a standard 
 Points 17,23,25 REMOVE?
 
 
-\begin{figure}[h!]
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.6\textwidth]{cu-goodness}
   \caption{A gull}
   \label{fig:cu-goodness}
 \end{figure}
 
+
+\section{P-values}
+It is common to provide p-values when conducting statistical analysis. P-values are propabilities (i.e. their values always lie between zero to 1) and they show how likely certain situations are. P-values which are close to zero (usually <= 0.05) are more likely to occur if the study has shown something positive. It is said that the result is significant if the p-value is close to zero. On the other hand, the result is said to be non-significant if the p-value is away from zero (usually > 0.05).
+
+\section{Confidence Intervals}
+It is known that in statistics we use the sample data at hand to draw inferences about the entire population (i.e. all the data) and make an estimate of the value(s) we are trying to measure or predict. It is very important to present such estimate with a measure of precision. This measure of precision depends on the sample size and normally takes the form of a 95\% Confidence Interval or a standard error value (the former is calculated from the latter). The 95\% confidence interval gives the range of poulation parameters that the sample leads us to believe are possible. 
+The 95\% confidence interval is presented as a range of two values $(a,b)$ and is interpreted as: we can be 95\% confident that the result/effect we are trying to measure will happen by an overage of at least $a$ and maybe as much as $b$
+
+
+\section{Examining the Variables}
+As we have three numerical input variables, it is appropriate to examine their statistical summaries. This is what we show in table~\ref{table:stats-summaries}.
+\begin{table}[!htbp]
+\begin{center}
+    \begin{tabular}{ | p{3cm} | p{2.5cm} | p{2.5cm} | p{2.5cm} | p{2.5cm} |}
+    \hline
+     & CU & PHI & AS & Q\\ \hline
+    Valid & 31 & 31 & 31 & 31\\ \hline  
+    Missing & 0 & 0 & 0 & 0\\ \hline  
+    Mean   & 17.23\tiny{(13.24,21.21)}   & 40.13\tiny{(38.23,42.02)}   & 21.55\tiny{(15.53,27.58)} & 240.3\tiny{(166.05,314.53)} \\ \hline  
+    Median & 20.00  & 39.00 & 17.00 & 165.0 \\ \hline
+    Std. Deviation & 10.87109 & 5.168765 & 16.41788 & 202.4052\\ \hline  
+    Min & 4.00 & 33.00 & 1.60 & 2.0\\ \hline  
+    Max & 35.00 & 49.00 & 65.00 & 820.0  \\ \hline     
+    \end{tabular}
+\end{center}
+\caption{Statistical Summaries of the Variables with 95\% Confidence Interval for the Mean values}
+\label{table:stats-summaries}
+\end{table}
+
+By examining the table, we observe that we have data for all the points (i.e. no missing values). Also, we notice that there is no big difference between the mean and median values of each variable, hence outliers are unlikely (outliers usually have a big influence on the difference between the mean and the median). Another values that can analyse from the table are the minimum and maximum values for each input variable. They appear to be within possible ranges for all of the three input variables. Finally, as standard deviation is an indicator of how spread out the data is, we can check the validity of our data by going 2 standard deviations on each side of the mean for the outcome variable Q. We notice that more than 95\% of all values of this variable lie within that range.
+
+\section{Histograms of the Variables}
+We display the histograms of the three input variables and the output variable in Figure~\ref{fig:histograms}. A close look at these histograms indicate some "bunching" around multiples of 5 for the CU input variable (Figure~\ref{fig:cu-hist}) and around multiples of 10 for the AS variable (Figure~\ref{fig:as-hist}). Examination of the frequency distribution reveals that most values were measured to the nearest 5 XXX UNIT and 10 XXX UNIT respectively.
+\begin{figure}[!htbp]
+        \centering
+        \begin{subfigure}[b]{0.45\textwidth}
+                \includegraphics[width=\textwidth]{cu-hist}
+                \caption{Hist of CU}
+                \label{fig:cu-hist}
+        \end{subfigure}%
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+          %(or a blank line to force the subfigure onto a new line)
+        \begin{subfigure}[b]{0.45\textwidth}
+                \includegraphics[width=\textwidth]{phi-hist}
+                \caption{Hist of PHI}
+                \label{fig:phi-hist}
+        \end{subfigure}
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+          %(or a blank line to force the subfigure onto a new line)
+        \begin{subfigure}[b]{0.45\textwidth}
+                \includegraphics[width=\textwidth]{as-hist}
+                \caption{Hist of AS}
+                \label{fig:as-hist}
+        \end{subfigure}
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+          %(or a blank line to force the subfigure onto a new line)
+        \begin{subfigure}[b]{0.45\textwidth}
+                \includegraphics[width=\textwidth]{q-hist}
+                \caption{Hist of Q}
+                \label{fig:q-hist}
+        \end{subfigure}
+        \caption{Histograms of the Variables}
+        \label{fig:histograms}
+\end{figure}
+
+
+
+\section{Relationships between the Variables}
+We show a scatterplot matrix between all variables in Figure~\ref{fig:pairs}. The top row of this scatterplot matrix gives the scatterplots of Q against each of the other three input variables. Additionally, we show the univariate relationship between our outcome variable Q and the input variables in Table~\ref{table:corr}.
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.5\textwidth]{pairs}
+  \caption{Scatterplot of all the variables}
+  \label{fig:pairs}
+\end{figure}
+
+
+\begin{table}[!htbp]
+\centering
+
+\begin{tabular}{*5c}
+\toprule
+&  \multicolumn{2}{c}{Correlation (p-value) with Q} \\
+\midrule
+{}   & Pearson   & Spearman    \\
+CU & 0.4595897(0.009293) & 0.1952728(0.2925)   \\
+AS   & 0.1964417(0.2895)   & 0.2026105(0.2743)  \\
+PHI & 0.3082577(0.09158)  & 0.3982587(0.02649)  \\
+\bottomrule
+\end{tabular}
+\caption{Correlations between the Input Variables and Q}
+\label{table:corr}
+\end{table}
+
+
+
+
+The 95\% Confidence Interval for Pearson's correlation between CU and Q is (0.1257239,0.6999433)\\
+The 95\% Confidence Interval for Pearson's correlation between AS and Q is (-0.1697116,0.5149384)\\
+The 95\% Confidence Interval for Pearson's correlation between PHI and Q is (-0.0517331,0.5973504)\\
 
 \bibliographystyle{plain}
 \bibliography{report}
