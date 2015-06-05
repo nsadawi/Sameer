@@ -28,7 +28,7 @@
 
 
 \usepackage{subcaption}
-
+\usepackage{subfig}
 \usepackage{verbatim}
 
 \usepackage{array}
@@ -55,6 +55,9 @@ Regression analysis is a powerful technique that can be used to address various 
 In order to fit models, we are going to use R~\cite{R} which is a powerful and easy to use tool for statistical computing and graphics. R makes it easy to manipulate data and perform calculations as well as display information graphically. It also facilitates modelling (linear and nonlinear) and other statistical processes.
 \section{Plotting the Data}
 
+\section{The Research Question}
+Before we emark on any analysis, let us be clear about what we are addressing.\\
+In this report, we will be addressing whether there is any association between VARIABLE(s) and Q.
 
 \section{Examining a Fit}
 There are several diagnostics that can be used to explore the goodness of fit of a model. In the remainder of this report we are going to use the following:
@@ -162,7 +165,7 @@ We display the histograms of the three input variables and the output variable i
 
 
 \section{Relationships between the Variables}
-We show a scatterplot matrix between all variables in Figure~\ref{fig:pairs}. The top row of this scatterplot matrix gives the scatterplots of Q against each of the other three input variables. Additionally, we show the univariate relationship between our outcome variable Q and the input variables in Table~\ref{table:corr}.
+We show a scatterplot matrix between all variables in Figure~\ref{fig:pairs}. The top row of this scatterplot matrix gives the scatterplots of Q against each of the other three input variables. Additionally, we show the univariate relationship between our outcome variable Q and the input variables in Table~\ref{table:corr-q}. From this table, we can notice that the correlation between CU and Q and between PHI and Q is significant at the p $<$ 0.05 level.
 \begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.5\textwidth]{pairs}
@@ -180,20 +183,147 @@ We show a scatterplot matrix between all variables in Figure~\ref{fig:pairs}. Th
 \midrule
 {}   & Pearson   & Spearman    \\
 CU & 0.4595897(0.009293) & 0.1952728(0.2925)   \\
+% &  (0.1257239,0.6999433) &    \\
 AS   & 0.1964417(0.2895)   & 0.2026105(0.2743)  \\
+%  & (-0.1697116,0.5149384)   &   \\
 PHI & 0.3082577(0.09158)  & 0.3982587(0.02649)  \\
+% & (-0.0517331,0.5973504)  &   \\
 \bottomrule
 \end{tabular}
 \caption{Correlations between the Input Variables and Q}
-\label{table:corr}
+\label{table:corr-q}
+\end{table}
+
+%The 95\% Confidence Interval for Pearson's correlation between CU and Q is (0.1257239,0.6999433)\\
+%The 95\% Confidence Interval for Pearson's correlation between AS and Q is (-0.1697116,0.5149384)\\
+%The 95\% Confidence Interval for Pearson's correlation between PHI and Q is (-0.0517331,0.5973504)\\
+We also provide information about the correlations between our input variables in table~\ref{table:corr}. From this table we can observe that none of the correlations between the input variables is significant at the p $<$ 0.05 level
+
+\begin{table}[htbp]
+  \small
+  \centering
+  \caption{Correlations between Input Variables}
+  \subfloat[Pearson Correlation]{%
+    \hspace{.5cm}%
+    \begin{tabular}{ | l | p{3.9cm} | p{3.9cm} | p{3.9cm} |}
+    \hline
+     & AS & CU & PHI \\ \hline
+    AS & 1 & -0.2596521(0.1584)  & 0.2605386(0.1569)  \\ \hline
+    % &  & (-0.5622613,0.1042825) &  (-0.1033419,0.5629112) \\ \hline
+    CU & -0.2596521(0.1584)   & 1 & -0.2176558(0.2395) \\ \hline
+    % &  (-0.5622613,0.1042825)  &  & (-0.5310399,0.1481069) \\ \hline
+    PHI & 0.2605386(0.1569)  & -0.2176558(0.2395) & 1 \\ \hline
+    % &  (-0.1033419,0.5629112) & (-0.5310399,0.1481069) &  \\ \hline
+    \end{tabular}
+    \label{table:corr-p}
+    \hspace{.5cm}%
+  }\hspace{1cm}
+  \subfloat[Spearman Correlation]{%
+    \hspace{.5cm}%
+    \begin{tabular}{ | l | l | l | l |}
+    \hline
+     & AS & CU & PHI \\ \hline
+    AS & 1 & -0.3944457(0.0281) & 0.204013(0.271) \\ \hline
+    CU & -0.3944457(0.0281) & 1 & -0.2161602(0.2428) \\ \hline
+    PHI & 0.204013(0.271) & -0.2161602(0.2428) & 1 \\ \hline
+    \end{tabular}
+    \label{table:corr-sp}
+    \hspace{.5cm}%
+  }
+  \label{table:corr}
 \end{table}
 
 
+\section{Fitting the Models}
+Let us keep in mind that the ultimate aim of our final model is to determine whether there is an association between VARIABLE(s) and Q. 
+Therefore, it would seem reasonable to model CONFOUNDER FIRST and then enter CU into the model and see whether it is associated with Q. We can do this in the opposite way by enetering CU into the model first and then follow it by PHI and AS in turn to see what impact each of them would have on the model.
+
+\subsection{Modelling the Relationship between CU and Q} 
+In this section, we are going to build a simple linear regression model using just CU as input and Q as output. After using R's lm() function, the model looks as follows:\\
+\begin{equation}
+\label{eq:cu}
+Q = 92.890    +    8.557*CU 
+\end{equation}       
+By examining equation~\ref{eq:cu}, we observe that an increase, or decrease, of CU by one unit, causes an increase, or decrease, in Q by 8.557 units
+
+\begin{figure}[htp!]
+  \centering
+  \includegraphics[width=0.986\textwidth]{cu-line}
+  \caption{The Relationship between CU and Q}
+  \label{fig:cu-line}
+\end{figure}
+
+\subsection{Modelling the Relationship between AS and Q} 
+In this section, we are going to build a simple linear regression model using just AS as input and Q as output. After using R's lm() function, the model looks as follows:\\
+\begin{equation}
+\label{eq:as}
+Q = 188.089   +     2.422*AS 
+\end{equation}       
+By examining equation~\ref{eq:as}, we observe that an increase, or decrease, of AS by one unit, causes an increase, or decrease, in Q by 2.422 units
+
+\begin{figure}[htp!]
+  \centering
+  \includegraphics[width=0.986\textwidth]{as-line}
+  \caption{The Relationship between AS and Q}
+  \label{fig:as-line}
+\end{figure}
+
+\subsection{Modelling the Relationship between PHI and Q} 
+In this section, we are going to build a simple linear regression model using just PHI as input and Q as output. After using R's lm() function, the model looks as follows:\\
+\begin{equation}
+\label{eq:phi}
+Q =  -244.11    +    12.07*PHI 
+\end{equation}       
+By examining equation~\ref{eq:phi}, we observe that an increase, or decrease, of PHI by one unit, causes an increase, or decrease, in Q by 12.07 units
+
+\begin{figure}[htp!]
+  \centering
+  \includegraphics[width=0.986\textwidth]{phi-line}
+  \caption{The Relationship between PHI and Q}
+  \label{fig:phi-line}
+\end{figure}
 
 
-The 95\% Confidence Interval for Pearson's correlation between CU and Q is (0.1257239,0.6999433)\\
-The 95\% Confidence Interval for Pearson's correlation between AS and Q is (-0.1697116,0.5149384)\\
-The 95\% Confidence Interval for Pearson's correlation between PHI and Q is (-0.0517331,0.5973504)\\
+\subsection{Modelling the Relationship between CU, AS and Q} 
+In this section, we are going to build a simple linear regression model using CU and AS as inputs and Q as output. After using R's lm() function, the model looks as follows:\\
+\begin{equation}
+\label{eq:cuas}
+Q = -25.286   +    10.194*CU +       4.174*AS
+\end{equation}       
+By examining equation~\ref{eq:cuas}, we observe that when fixing AS, an increase, or decrease, of CU by one unit, causes an increase, or decrease, in Q by 10.194 units.
+Similarly, when fixing CU, an increase, or decrease, of AS by one unit, causes an increase, or decrease, in Q by 4.174 units.
+
+
+\subsection{Modelling the Relationship between CU, PHI and Q} 
+In this section, we are going to build a simple linear regression model using CU and PHI as inputs and Q as output. After using R's lm() function, the model looks as follows:\\
+\begin{equation}
+\label{eq:cuphi}
+Q = -610.53  +     10.29*CU   +     16.78*PHI
+\end{equation}       
+By examining equation~\ref{eq:cuphi}, we observe that when fixing PHI, an increase, or decrease, of CU by one unit, causes an increase, or decrease, in Q by 10.29 units.
+Similarly, when fixing CU, an increase, or decrease, of PHI by one unit, causes an increase, or decrease, in Q by 16.78 units.
+
+
+\subsection{Modelling the Relationship between AS, PHI and Q} 
+In this section, we are going to build a simple linear regression model using AS and PHI as inputs and Q as output. After using R's lm() function, the model looks as follows:\\
+\begin{equation}
+\label{eq:asphi}
+Q = -226.213  +      1.536*AS   +    10.8*PHI
+\end{equation}       
+By examining equation~\ref{eq:asphi}, we observe that when fixing PHI, an increase, or decrease, of AS by one unit, causes an increase, or decrease, in Q by 1.536 units.
+Similarly, when fixing AS, an increase, or decrease, of PHI by one unit, causes an increase, or decrease, in Q by 10.8 units.
+
+
+\subsection{Modelling the Relationship between CU, AS, PHI and Q} 
+In this section, we are going to build a simple linear regression model using CU, AS and PHI as inputs and Q as output (recall this is the purpose of this study). After using R's lm() function, the model looks as follows:\\
+\begin{equation}
+\label{eq:cuasphi}
+Q = -609.893  +     11.313*CU    +    3.167*AS   +    14.629*PHI
+\end{equation}       
+By examining equation~\ref{eq:cuasphi}, we observe that when fixing PHI and AS, an increase, or decrease, of CU by one unit, causes an increase, or decrease, in Q by 11.313 units.
+Similarly, when fixing CU and AS, an increase, or decrease, of PHI by one unit, causes an increase, or decrease, in Q by 14.629 units. Also, when fixing CU and PHI, an increase, or decrease, of AS by one unit, causes an increase, or decrease, in Q by 3.167 units.
+
+
 
 \bibliographystyle{plain}
 \bibliography{report}
